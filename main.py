@@ -1,10 +1,12 @@
 import requests
 from dotenv import load_dotenv
 import os
-import json
 from string import punctuation
 from PIL import Image, ImageDraw, ImageFont
 from groq import Groq
+from captcha.image import ImageCaptcha
+import io
+
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -33,29 +35,18 @@ def generate_obfuscated_text(text, client):
 
 def generate_image(sentence):
     # Create a new image
-    img = Image.new('RGB', (200, 100), color = (73, 109, 137))
-
-    # Create a drawing object
-    draw = ImageDraw.Draw(img)
-
-    font_size = 30
-    # Specify font 
-    border = 10
-    im = Image.new("RGB", (1, 1), "white")
-    font = ImageFont.truetype("/static/carbontype.ttf", font_size)
-    draw = ImageDraw.Draw(im)
-    size = draw.textlength(sentence, font=font)
-    width = int(size)
-    height = font_size
-    im = Image.new("RGB", (width, height), "white")
-    draw = ImageDraw.Draw(im)
-    draw.text((width//2, height//2), sentence, anchor='mm', fill="black", font=font)
-    im.show()
-    img.save("obfuscated_text.png")
+    sentence = str(sentence)
+    custom_fonts = ['/static/carbontype.ttf']
+    captcha = ImageCaptcha(fonts=custom_fonts, width=20*len(sentence), height=100, font_sizes=[20, 10])
+    data = captcha.generate_image(sentence)
+    return data
 
 if __name__ == "__main__":
     text = input("Type your deleted message: ")
     client = set_up()
     sentence = generate_obfuscated_text(text, client)
-    generate_image(sentence)
+    
+    image = generate_image(sentence)
+    image.show()
+    image.save("obfuscated_text.png")
 
