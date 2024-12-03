@@ -5,10 +5,10 @@ todos:
 
 - [x] get initial captcha with awkward phrasing up
 
-- [] make captcha legible
+- [ ] make captcha legible
 
-- [] make a messaging app ???
+- [ ] make a messaging app ???
 
-- [] give option to delete messages
+- [ ] give option to delete messages
 
-- [] make every deletion as horrible as the nightmare i had
+- [ ] make every deletion as horrible as the nightmare i had
