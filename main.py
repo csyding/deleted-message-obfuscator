@@ -6,12 +6,12 @@ from string import punctuation
 from PIL import Image, ImageDraw, ImageFont
 from groq import Groq
 
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+PROMPT = os.getenv("PROMPT")
+
 def set_up():
-    load_dotenv()
-    API_KEY = os.getenv("API_KEY")
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
-
     client = Groq(
         # This is the default and can be omitted
         api_key=GROQ_API_KEY,
@@ -23,7 +23,7 @@ def generate_obfuscated_text(text, client):
         messages=[
             {
                 "role": "user",
-                "content": "generate just one synonymous (and slightly more awkward) sentence for this: " + text + ". please do not include any other text and please try to keep it short."
+                "content": PROMPT + text,
             }
         ],
         model="llama3-8b-8192",
@@ -42,7 +42,7 @@ def generate_image(sentence):
     # Specify font 
     border = 10
     im = Image.new("RGB", (1, 1), "white")
-    font = ImageFont.truetype("/Users/ceciliading/Library/Fonts/carbontype.ttf", font_size)
+    font = ImageFont.truetype("/static/carbontype.ttf", font_size)
     draw = ImageDraw.Draw(im)
     size = draw.textlength(sentence, font=font)
     width = int(size)
