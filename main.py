@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import os
 import json
 from string import punctuation
+from PIL import Image, ImageDraw, ImageFont
+
 
 
 load_dotenv()
@@ -28,4 +30,26 @@ for word in words:
     else:
         print("Error:", response.status_code, response.text)
 
-print(" ".join(obfuscated_words))
+captcha_text = " ".join(obfuscated_words)
+
+# Create a new image
+img = Image.new('RGB', (200, 100), color = (73, 109, 137))
+
+# Create a drawing object
+draw = ImageDraw.Draw(img)
+
+font_size = 30
+# Specify font 
+border = 10
+im = Image.new("RGB", (1, 1), "white")
+font = ImageFont.truetype("/Users/ceciliading/Library/Fonts/carbontype.ttf", font_size)
+draw = ImageDraw.Draw(im)
+size = draw.textlength(captcha_text, font=font)
+width = int(size)
+height = font_size
+im = Image.new("RGB", (width, height), "white")
+draw = ImageDraw.Draw(im)
+draw.text((width//2, height//2), captcha_text, anchor='mm', fill="black", font=font)
+im.show()
+img.save("obfuscated_text.png")
+
